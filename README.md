@@ -53,9 +53,9 @@ A production-ready, full-stack AI platform for multi-class brain tumor classific
                                      │
                                      ▼
                              AWS EC2 Instance
+---
 
-
-# 🔄 Application Workflow
+## 🔄 Application Workflow
 
 The application follows an end-to-end workflow from user authentication to MRI classification and explainable prediction.
 
@@ -130,7 +130,7 @@ The application follows an end-to-end workflow from user authentication to MRI c
               │ • LIME Explanation  │
               └─────────────────────┘
 
-
+---
 ## 🧠 Machine Learning Pipeline
 
 The application uses a TensorFlow/Keras CNN to classify brain MRI scans into four categories: **Glioma, Meningioma, Pituitary, and No Tumor**.
