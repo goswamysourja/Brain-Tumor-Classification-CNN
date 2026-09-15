@@ -1,500 +1,424 @@
-# 🧠 Brain Tumor MRI Classification using Convolutional Neural Networks (CNN)
+# 🧠 Brain Tumor AI — Full-Stack MRI Classification & Explainable AI
 
-An end-to-end Deep Learning project for automated Brain Tumor Classification from MRI scans using Convolutional Neural Networks (CNN). This system classifies MRI images into four categories: Glioma, Meningioma, Pituitary Tumor, and No Tumor. The project includes data preprocessing, augmentation, CNN model development, evaluation, visualization, model persistence, and an interactive Gradio-based web application for real-time predictions.
+[![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
+[![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-FF6F00?style=flat-square&logo=tensorflow&logoColor=white)](https://tensorflow.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?style=flat-square&logo=docker&logoColor=white)](https://www.docker.com/)
+[![AWS EC2](https://img.shields.io/badge/AWS-EC2-232F3E?style=flat-square&logo=amazon-aws&logoColor=white)](https://aws.amazon.com/ec2/)
 
----
+A production-ready, full-stack AI platform for multi-class brain tumor classification from MRI scans. Features a custom **TensorFlow/Keras CNN**, **LIME Explainable AI (XAI)** interpretability layer, **FastAPI REST backend**, interactive **Nginx-served frontend**, persistent **SQLAlchemy authentication**, and an **AWS EC2 / Docker** deployment pipeline.
 
-## 📌 Project Overview
-
-Brain tumors are among the most critical neurological disorders, and early diagnosis plays a crucial role in treatment planning. Manual interpretation of MRI scans can be time-consuming and subject to human error. This project explores the application of Deep Learning techniques to automate the classification of brain MRI images.
-
-The objective is to build a robust image classification pipeline capable of distinguishing between multiple tumor types and healthy MRI scans using a Convolutional Neural Network.
-
----
-
-# 🎯 Problem Statement
-
-Given an MRI scan of the brain, predict whether the image belongs to one of the following categories:
-
-- Glioma Tumor
-- Meningioma Tumor
-- Pituitary Tumor
-- No Tumor
-
-This is a Multi-Class Image Classification problem.
+> ⚠️ **Medical Disclaimer:** Intended strictly for research and portfolio demonstration. Not a certified clinical diagnostic tool.
 
 ---
 
-# 🗂 Dataset
+## 💡 Quick Overview
 
-The project utilizes a Brain Tumor MRI Dataset containing MRI images organized into training and testing directories.
-
-## Classes
-
-| Class | Description |
-|---------|-------------|
-| Glioma | Tumor originating from glial cells |
-| Meningioma | Tumor arising from the meninges |
-| Pituitary | Tumor affecting the pituitary gland |
-| No Tumor | Healthy brain MRI |
-
-### Dataset Distribution
-
-Training Images: 5712
-
-Testing Images: 1311
-
-Total Classes: 4
+| Domain | Key Highlights |
+| :--- | :--- |
+| **Machine Learning** | Custom CNN, Data Augmentation, Multi-class Softmax classification (Glioma, Meningioma, Pituitary, No Tumor) |
+| **Explainable AI (XAI)** | LIME (Local Interpretable Model-agnostic Explanations) for region-of-interest heatmaps |
+| **Backend & Database** | FastAPI REST API, Automatic OpenAPI/Swagger documentation, SQLAlchemy ORM with persistent SQLite |
+| **Frontend UI** | Responsive Vanilla JS Dashboard, real-time image preview, probability visualizer, auth system |
+| **DevOps & Cloud** | Docker multi-container setup (Nginx + FastAPI), Docker Hub publishing, AWS EC2 cloud infrastructure |
 
 ---
 
-# ⚙️ Project Pipeline
-
-The complete workflow consists of the following stages:
+## 🏗️ System Architecture
 
 ```text
-MRI Dataset
-     │
-     ▼
-Data Extraction
-     │
-     ▼
-Image Preprocessing
-     │
-     ▼
-Data Augmentation
-     │
-     ▼
-CNN Architecture
-     │
-     ▼
-Model Training
-     │
-     ▼
-Model Evaluation
-     │
-     ▼
-Visualization
-     │
-     ▼
-Model Saving
-     │
-     ▼
-Gradio Deployment
-```
+               ┌─────────────────────────────────────────┐
+               │           Client Browser                │
+               │   HTML5 / CSS3 / Vanilla JavaScript    │
+               └────────────────────┬────────────────────┘
+                                    │
+                             HTTP   │ Port 8080
+                                    ▼
+               ┌─────────────────────────────────────────┐
+               │         Frontend Container              │
+               │            Nginx Alpine                 │
+               └────────────────────┬────────────────────┘
+                                    │
+                         REST API   │ Port 8000
+                                    ▼
+               ┌─────────────────────────────────────────┐
+               │          Backend Container              │
+               │               FastAPI                   │
+               │  ┌──────────────────┬────────────────┐  │
+               │  │  TensorFlow CNN  │  LIME Engine   │  │
+               │  └──────────────────┴────────────────┘  │
+               │                     │                   │
+               │         SQLAlchemy + SQLite             │
+               └─────────────────────┬───────────────────┘
+                                     │
+                                     ▼
+                             AWS EC2 Instance
 
----
 
-# 🔄 Data Preprocessing
+# 🔄 Application Workflow
 
-The preprocessing stage ensures that the MRI images are suitable for Deep Learning training.
-
-### Image Resizing
-
-All MRI scans are resized to:
-
-```python
-224 × 224 × 3
-```
-
-to maintain a consistent input size across the dataset.
-
-### Pixel Normalization
-
-Pixel values are scaled from:
-
-```python
-0 - 255
-```
-
-to
-
-```python
-0 - 1
-```
-
-using:
-
-```python
-rescale = 1./255
-```
-
-This improves training stability and convergence speed.
-
----
-
-# 🔀 Data Augmentation
-
-To improve model generalization and reduce overfitting, image augmentation techniques are applied during training.
-
-### Techniques Used
-
-- Random Rotation
-- Random Zoom
-- Horizontal Flip
-
-Implementation:
-
-```python
-ImageDataGenerator(
-    rescale=1./255,
-    rotation_range=15,
-    zoom_range=0.1,
-    horizontal_flip=True
-)
-```
-
----
-
-# 🧠 CNN Architecture
-
-The model is built using TensorFlow and Keras Sequential API.
-
-### Architecture
+The application follows an end-to-end workflow from user authentication to MRI classification and explainable prediction.
 
 ```text
-Input Image (224×224×3)
-          │
-          ▼
-Conv2D (32 Filters)
-          │
-          ▼
-MaxPooling2D
-          │
-          ▼
-Conv2D (64 Filters)
-          │
-          ▼
-MaxPooling2D
-          │
-          ▼
-Flatten
-          │
-          ▼
-Dense (128 Neurons)
-          │
-          ▼
-Dense (4 Neurons - Softmax)
-```
-
-### Layer Functions
-
-#### Convolution Layer
-
-Extracts visual features such as:
-
-- Edges
-- Shapes
-- Textures
-- Tumor patterns
-
-#### Max Pooling Layer
-
-Reduces feature map dimensions and computational complexity.
-
-#### Flatten Layer
-
-Converts 2D feature maps into a 1D feature vector.
-
-#### Dense Layers
-
-Perform classification based on learned features.
-
-#### Softmax Layer
-
-Produces probability scores for each tumor class.
-
----
-
-# ⚡ Model Compilation
-
-The model is compiled using:
-
-### Optimizer
-
-```python
-Adam
-```
-
-Adaptive learning rate optimization algorithm.
-
-### Loss Function
-
-```python
-Categorical Crossentropy
-```
-
-Used because the problem involves multiple classes.
-
-### Evaluation Metric
-
-```python
-Accuracy
-```
-
-Measures classification performance.
-
----
-
-# 🏋️ Model Training
-
-The CNN model is trained using:
-
-```python
-model.fit()
-```
-
-with:
-
-- Training Dataset
-- Validation Dataset
-- Multiple Epochs
-
-During training, the model learns to identify tumor-specific patterns from MRI scans through backpropagation and weight optimization.
-
----
-
-# 📊 Model Evaluation
-
-The trained model is evaluated on unseen testing data.
-
-### Evaluation Metrics
-
-- Accuracy
-- Loss
-- Precision
-- Recall
-- F1 Score
-
-Implementation:
-
-```python
-model.evaluate(test_data)
-```
-
----
-
-# 📈 Performance Visualization
-
-Training and validation performance are visualized using:
-
-### Accuracy Curve
-
-Shows learning progression across epochs.
-
-### Loss Curve
-
-Illustrates optimization behavior and convergence.
-
-These graphs help identify:
-
-- Underfitting
-- Overfitting
-- Model stability
-
----
-
-# 📋 Classification Report
-
-A detailed classification report is generated containing:
-
-- Precision
-- Recall
-- F1 Score
-- Support
-
-for each tumor category.
-
-Example:
-
-```python
-classification_report()
-```
-
----
-
-# 🔍 Confusion Matrix
-
-A confusion matrix is generated to visualize classification performance across all classes.
-
-This helps identify:
-
-- Correct classifications
-- Misclassifications
-- Class-specific weaknesses
-
-Visualization is performed using:
-
-```python
-Seaborn Heatmap
-```
-
----
-
-# 💾 Model Persistence
-
-The trained model is saved using:
-
-```python
-model.save()
-```
-
-allowing future inference without retraining.
-
-Saved Format:
+┌─────────────────────┐
+│      User           │
+│   Opens Web App     │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│ Register / Login    │
+│   Authentication    │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│   Upload MRI Image  │
+│  Preview MRI Scan   │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│  Frontend JavaScript│
+│   Sends API Request │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│    FastAPI Backend  │
+│      /predict       │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│ Image Preprocessing │
+│ Resize + Normalize  │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│ TensorFlow / Keras  │
+│     CNN Model       │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────────────┐
+│     Classification Result   │
+│                             │
+│  Glioma                    │
+│  Meningioma                │
+│  No Tumor                  │
+│  Pituitary                 │
+└──────────┬──────────────────┘
+           │
+           ├──────────────────────┐
+           │                      │
+           ▼                      ▼
+┌─────────────────────┐  ┌─────────────────────┐
+│ Class Probabilities │  │    LIME Analysis    │
+│    Visualization    │  │ Explain Prediction  │
+└──────────┬──────────┘  └──────────┬──────────┘
+           │                        │
+           └────────────┬───────────┘
+                        │
+                        ▼
+              ┌─────────────────────┐
+              │   Results Dashboard │
+              │                     │
+              │ • Prediction        │
+              │ • Probabilities     │
+              │ • LIME Explanation  │
+              └─────────────────────┘
+
+
+## 🧠 Machine Learning Pipeline
+
+The application uses a TensorFlow/Keras CNN to classify brain MRI scans into four categories: **Glioma, Meningioma, Pituitary, and No Tumor**.
 
 ```text
-brain_tumor_cnn.keras
-```
+MRI Image → Resize (224×224) → Normalize (0–1)
+          → Data Augmentation → CNN
+          → Softmax Probabilities → Predicted Class
 
----
 
-# 🌐 Interactive Web Application
+## 🔍 Explainable AI — LIME
 
-A Gradio-based web interface is developed for real-time MRI classification.
+To improve model interpretability, the application integrates **LIME (Local Interpretable Model-Agnostic Explanations)**.
+
+After generating a prediction, the system can analyze the MRI image and identify regions that contributed most to the model's decision.
+
+```text
+MRI Image
+    │
+    ▼
+CNN Prediction
+    │
+    ▼
+LIME Analysis
+    │
+    ▼
+Important Image Regions
+    │
+    ▼
+Visual Explanation
+
+
+## ⚡ FastAPI Backend
+
+The application uses **FastAPI** to provide a lightweight and scalable REST API for authentication, MRI prediction, and explainable AI.
+
+### API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/` | API health/status check |
+| `POST` | `/register` | Register a new user |
+| `POST` | `/login` | Authenticate an existing user |
+| `POST` | `/predict` | Classify a brain MRI image |
+| `POST` | `/explain` | Generate a LIME explanation |
+| `GET` | `/docs` | Interactive Swagger API documentation |
+
+### Backend Responsibilities
+
+- User registration and authentication
+- MRI image upload handling
+- Brain tumor classification using the trained CNN
+- Prediction probability generation
+- LIME-based visual explanations
+- SQLite database integration using SQLAlchemy
+- REST API communication with the frontend
+
+FastAPI's built-in **Swagger UI** makes it easy to test and explore the available endpoints during development and deployment.
+
+
+
+## 🔐 Database & Authentication
+
+The application includes a simple user authentication system backed by **SQLite** and **SQLAlchemy**.
+
+### Authentication Flow
+
+```text
+User Registration
+       │
+       ▼
+   FastAPI API
+       │
+       ▼
+ SQLite Database
+       │
+       ▼
+ User Account Created
+
+
+### For User Login
+
+ User Login
+    │
+    ▼
+FastAPI Authentication
+    │
+    ▼
+Validate User Credentials
+    │
+    ▼
+Access Dashboard
+                               
+## 🎨 Frontend
+
+The frontend provides the user-facing interface for authentication, MRI image upload, prediction results, and explainable AI visualization.
 
 ### Features
 
-- Upload MRI image
-- Automatic preprocessing
-- Tumor prediction
-- Confidence scores
-- User-friendly interface
+- User registration and login
+- Brain MRI image upload
+- Real-time communication with the FastAPI backend
+- Predicted tumor class and probability display
+- LIME explanation visualization
+- Dashboard-based user experience
+- Responsive interface using HTML and CSS
 
-Workflow:
+### Technology
 
-```text
-Upload MRI
-     │
-     ▼
-Preprocessing
-     │
-     ▼
-CNN Prediction
-     │
-     ▼
-Class Probabilities
-     │
-     ▼
-Final Tumor Type
-```
+- **HTML5**
+- **CSS3**
+- **JavaScript**
+- **Nginx** for serving the frontend in Docker
 
----
+The frontend dynamically determines the backend API host from the current browser hostname, allowing the same frontend build to work across local Docker and AWS EC2 deployments.
 
-# 🧪 Prediction Example
 
-Input:
 
-MRI Brain Scan
+## 🐳 Docker Architecture
 
-Output:
+The application is containerized using **Docker**, with separate containers for the backend API and frontend web server.
+
+### Container Architecture
 
 ```text
-Predicted Class: Meningioma
+                    ┌──────────────────────────┐
+                    │        User / Browser     │
+                    └────────────┬─────────────┘
+                                 │
+                                 ▼
+                    ┌──────────────────────────┐
+                    │   Frontend Container     │
+                    │   Nginx + HTML/CSS/JS    │
+                    │        Port: 8080        │
+                    └────────────┬─────────────┘
+                                 │
+                                 │ HTTP API Requests
+                                 ▼
+                    ┌──────────────────────────┐
+                    │   Backend Container      │
+                    │   FastAPI + TensorFlow   │
+                    │        Port: 8000        │
+                    └────────────┬─────────────┘
+                                 │
+                    ┌────────────┴─────────────┐
+                    ▼                          ▼
+          ┌─────────────────┐       ┌──────────────────┐
+          │  SQLite Database │       │  CNN Model       │
+          │ brain_tumor.db   │       │ best_model.keras │
+          └─────────────────┘       └──────────────────┘
 
-Confidence Scores:
 
-Meningioma : 92.8%
-Glioma     : 7.2%
-No Tumor   : 0.0%
-Pituitary  : 0.0%
-```
+## 📦 Docker Hub
 
----
+The containerized application is published to **Docker Hub** so the deployment environment can pull pre-built images without rebuilding the application on the server.
 
-# 🛠 Technologies Used
-
-### Deep Learning
-
-- TensorFlow
-- Keras
-
-### Data Processing
-
-- NumPy
-
-### Visualization
-
-- Matplotlib
-- Seaborn
-
-### Evaluation
-
-- Scikit-Learn
-
-### Deployment
-
-- Gradio
-
-### Environment
-
-- Google Colab
-
----
-
-# 📁 Project Structure
+### Image Workflow
 
 ```text
-BrainTumorProject/
+Source Code
+     │
+     ▼
+Build Docker Images
+     │
+     ▼
+Push Images to Docker Hub
+     │
+     ▼
+AWS EC2
+     │
+     ▼
+Pull Images
+     │
+     ▼
+Run Containers
 
-│
-├── dataset/
-│   ├── Training/
-│   └── Testing/
-│
-├── notebooks/
-│   └── brain_tumor.ipynb
-│
-├── models/
-│   └── brain_tumor_cnn.keras
-│
-├── app/
-│   └── gradio_app.py
-│
-├── screenshots/
-│   ├── accuracy_curve.png
-│   ├── confusion_matrix.png
-│   └── prediction_demo.png
-│
-├── requirements.txt
-│
-├── README.md
-│
-└── .gitignore
-```
 
----
 
-# 🚀 Future Improvements
+## ☁️ AWS EC2 Deployment
 
-- Transfer Learning using VGG16
-- Transfer Learning using ResNet50
-- EfficientNet Implementation
-- Grad-CAM Explainable AI Visualizations
-- Model Comparison Dashboard
-- Cloud Deployment
-- Docker Containerization
-- REST API Integration
+The application is deployed on **Amazon EC2** using Docker containers.
 
----
+### Deployment Environment
 
-# 🎓 Key Learning Outcomes
+- **Cloud Provider:** AWS
+- **Service:** Amazon EC2
+- **Operating System:** Ubuntu Server
+- **Instance Type:** `t3.small`
+- **Architecture:** x86_64
+- **Storage:** 20 GiB gp3
+- **Region:** Asia Pacific (Mumbai)
 
-Through this project, the following concepts were explored:
+### Deployment Architecture
 
-- Image Preprocessing
-- Data Augmentation
-- Convolutional Neural Networks
-- Multi-Class Classification
-- Model Evaluation
-- Deep Learning Workflow
-- Medical Image Analysis
-- Interactive Model Deployment
+```text
+                    AWS EC2 Instance
+                         │
+              ┌──────────┴──────────┐
+              │                     │
+              ▼                     ▼
+     ┌─────────────────┐   ┌─────────────────┐
+     │ Backend Docker  │   │ Frontend Docker │
+     │    Container    │   │    Container    │
+     │    Port 8000    │   │    Port 8080    │
+     └────────┬────────┘   └─────────────────┘
+              │
+       ┌──────┴───────┐
+       ▼              ▼
+  SQLite Database   CNN Model
 
----
 
-# ⭐ Results
 
-The developed CNN model successfully learns discriminative MRI features and achieves strong classification performance on unseen data while providing an intuitive web-based prediction interface for end users.
+## 📈 Project Evolution
 
-This project demonstrates the complete lifecycle of a Deep Learning application, from raw medical imaging data to an interactive deployment-ready solution.
+The project evolved from a standalone CNN-based classification model into a complete full-stack AI application.
+
+### Evolution
+
+```text
+CNN Model Development
+        │
+        ▼
+Brain MRI Classification
+        │
+        ▼
+Model Evaluation
+        │
+        ▼
+FastAPI Inference Backend
+        │
+        ▼
+LIME Explainability
+        │
+        ▼
+User Authentication + Database
+        │
+        ▼
+Web-Based Frontend
+        │
+        ▼
+Docker Containerization
+        │
+        ▼
+Docker Hub Image Distribution
+        │
+        ▼
+AWS EC2 Deployment
+
+
+
+## 🛠️ Engineering Highlights
+
+This project demonstrates practical software engineering and deployment skills alongside machine learning.
+
+### Key Engineering Practices
+
+- Designed a **RESTful backend** using FastAPI
+- Integrated a trained **TensorFlow/Keras CNN** into an inference API
+- Added **LIME-based explainability** for model predictions
+- Implemented **SQLite + SQLAlchemy** for persistent application data
+- Built a separate **frontend and backend architecture**
+- Containerized services using **Docker**
+- Used **Docker Compose** to orchestrate multiple containers
+- Published Docker images to **Docker Hub**
+- Deployed the application on **AWS EC2**
+- Configured AWS **Security Groups** for application access
+- Persisted the SQLite database outside the backend container
+- Used `.gitignore` and `.dockerignore` to prevent unnecessary files and sensitive/local artifacts from being included in source control or Docker builds
+- Maintained the original machine learning work while extending it into a deployable full-stack application
+
+
+
+## 🎯 Project Purpose
+
+This project was developed to explore how a machine learning model can be transformed into a complete, deployable AI application.
+
+Rather than stopping at model training and evaluation, the project combines:
+
+- 🧠 **Machine Learning** — CNN-based MRI classification
+- 🔍 **Explainable AI** — LIME-based visual explanations
+- ⚡ **Backend Development** — FastAPI REST API
+- 🎨 **Frontend Development** — HTML, CSS, and JavaScript
+- 🔐 **Authentication** — User registration and login
+- 🗄️ **Database** — SQLite with SQLAlchemy
+- 🐳 **Containerization** — Docker and Docker Compose
+- 📦 **Image Distribution** — Docker Hub
+- ☁️ **Cloud Deployment** — AWS EC2
+
+The result is an end-to-end system demonstrating the complete journey from **machine learning experimentation to a containerized and cloud-deployed application**.
+
+> **Note:** This project is intended for educational and demonstration purposes and should not be used as a substitute for professional medical diagnosis.
