@@ -501,12 +501,12 @@ This project demonstrates practical **software engineering, machine learning, an
 
 ## 🔧 Key Engineering Practices
 
-| Area                       | Implementation                                          |
+| Area                       | Implementation                                           |
 | :------------------------- | :------------------------------------------------------ |
-| ⚡ **Backend**              | RESTful API using FastAPI                               |
+| ⚡ **Backend**              | RESTful API using FastAPI                              |
 | 🧠 **AI Inference**        | TensorFlow/Keras CNN                                    |
 | 🔍 **Explainability**      | LIME-based visual explanations                          |
-| 🗄️ **Database**           | SQLite + SQLAlchemy                                     |
+| 🗄️ **Database**           | SQLite + SQLAlchemy                                      |
 | 🎨 **Frontend**            | Separate frontend/backend architecture                  |
 | 🐳 **Containerization**    | Docker                                                  |
 | 🔄 **Orchestration**       | Docker Compose                                          |
@@ -514,7 +514,7 @@ This project demonstrates practical **software engineering, machine learning, an
 | ☁️ **Deployment**          | AWS EC2                                                 |
 | 🔐 **Networking**          | AWS Security Groups                                     |
 | 💾 **Persistence**         | SQLite database persisted outside backend container     |
-| 🛡️ **Repository Hygiene** | `.gitignore` and `.dockerignore`                        |
+| 🛡️ **Repository Hygiene** | `.gitignore` and `.dockerignore`                         |
 | 🔬 **ML Integration**      | Original ML work extended into a deployable application |
 
 ---
@@ -529,10 +529,10 @@ Rather than stopping at model training and evaluation, the project combines:
 | :-------------------------- | :----------------------------- |
 | 🧠 **Machine Learning**     | CNN-based MRI classification   |
 | 🔍 **Explainable AI**       | LIME-based visual explanations |
-| ⚡ **Backend Development**   | FastAPI REST API               |
+| ⚡ **Backend Development**   | FastAPI REST API              |
 | 🎨 **Frontend Development** | HTML, CSS, JavaScript          |
 | 🔐 **Authentication**       | User registration and login    |
-| 🗄️ **Database**            | SQLite with SQLAlchemy         |
+| 🗄️ **Database**            | SQLite with SQLAlchemy          |
 | 🐳 **Containerization**     | Docker & Docker Compose        |
 | 📦 **Image Distribution**   | Docker Hub                     |
 | ☁️ **Cloud Deployment**     | AWS EC2                        |
@@ -576,10 +576,7 @@ Rather than stopping at model training and evaluation, the project combines:
                   │
                   ▼
           🚀 DEPLOYED AI APP
-```
 
-The result is an **end-to-end system** demonstrating the complete journey from **machine learning experimentation to a containerized and cloud-deployed application**.
 
----
 
-> ⚠️ **Note:** This project is intended for educational and demonstration purposes and should not be used as a substitute for professional medical diagnosis.
+
