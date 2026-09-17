@@ -1,424 +1,585 @@
 # 🧠 Brain Tumor AI — Full-Stack MRI Classification & Explainable AI
 
-[![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
-[![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-FF6F00?style=flat-square&logo=tensorflow&logoColor=white)](https://tensorflow.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?style=flat-square&logo=docker&logoColor=white)](https://www.docker.com/)
-[![AWS EC2](https://img.shields.io/badge/AWS-EC2-232F3E?style=flat-square&logo=amazon-aws&logoColor=white)](https://aws.amazon.com/ec2/)
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python"/>
+  <img src="https://img.shields.io/badge/TensorFlow-2.x-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white" alt="TensorFlow"/>
+  <img src="https://img.shields.io/badge/FastAPI-0.100+-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI"/>
+  <img src="https://img.shields.io/badge/Docker-Containerized-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker"/>
+  <img src="https://img.shields.io/badge/AWS-EC2-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white" alt="AWS EC2"/>
+</p>
 
-A production-ready, full-stack AI platform for multi-class brain tumor classification from MRI scans. Features a custom **TensorFlow/Keras CNN**, **LIME Explainable AI (XAI)** interpretability layer, **FastAPI REST backend**, interactive **Nginx-served frontend**, persistent **SQLAlchemy authentication**, and an **AWS EC2 / Docker** deployment pipeline.
+<p align="center">
+  <strong>A complete end-to-end AI application for brain MRI classification, explainable predictions, authentication, containerization, and cloud deployment.</strong>
+</p>
 
-> ⚠️ **Medical Disclaimer:** Intended strictly for research and portfolio demonstration. Not a certified clinical diagnostic tool.
+---
+
+## 📌 Overview
+
+A production-ready, full-stack AI platform for **multi-class brain tumor classification from MRI scans**.
+
+The system combines:
+
+* 🧠 **TensorFlow/Keras CNN** for MRI classification
+* 🔍 **LIME Explainable AI (XAI)** for model interpretability
+* ⚡ **FastAPI REST backend**
+* 🎨 **Nginx-served frontend**
+* 🔐 **SQLAlchemy-based authentication**
+* 🗄️ **Persistent SQLite database**
+* 🐳 **Docker & Docker Compose**
+* 📦 **Docker Hub image distribution**
+* ☁️ **AWS EC2 cloud deployment**
+
+> ⚠️ **Medical Disclaimer:** This project is intended strictly for research, educational, and portfolio demonstration purposes. It is **not a certified clinical diagnostic tool**.
 
 ---
 
 ## 💡 Quick Overview
 
-| Domain | Key Highlights |
-| :--- | :--- |
-| **Machine Learning** | Custom CNN, Data Augmentation, Multi-class Softmax classification (Glioma, Meningioma, Pituitary, No Tumor) |
-| **Explainable AI (XAI)** | LIME (Local Interpretable Model-agnostic Explanations) for region-of-interest heatmaps |
-| **Backend & Database** | FastAPI REST API, Automatic OpenAPI/Swagger documentation, SQLAlchemy ORM with persistent SQLite |
-| **Frontend UI** | Responsive Vanilla JS Dashboard, real-time image preview, probability visualizer, auth system |
-| **DevOps & Cloud** | Docker multi-container setup (Nginx + FastAPI), Docker Hub publishing, AWS EC2 cloud infrastructure |
+| 🏷️ Domain               | 🚀 Key Highlights                                                                                   |
+| :----------------------- | :-------------------------------------------------------------------------------------------------- |
+| 🧠 **Machine Learning**  | Custom CNN, data augmentation, multi-class Softmax classification                                   |
+| 🔍 **Explainable AI**    | LIME-based region-of-interest heatmaps                                                              |
+| ⚡ **Backend & Database** | FastAPI REST API, OpenAPI/Swagger, SQLAlchemy ORM, SQLite                                           |
+| 🎨 **Frontend UI**       | Responsive Vanilla JS dashboard, real-time image preview, probability visualization, authentication |
+| 🐳 **DevOps & Cloud**    | Docker multi-container architecture, Docker Hub, AWS EC2                                            |
+
+### 🎯 Supported Classes
+
+```text
+🧠 Glioma
+🧠 Meningioma
+🧠 Pituitary
+🟢 No Tumor
+```
 
 ---
 
-## 🏗️ System Architecture
+# 🏗️ System Architecture
+
+The application follows a **frontend → API → AI inference → database/explainability** architecture.
 
 ```text
-               ┌─────────────────────────────────────────┐
-               │           Client Browser                │
-               │   HTML5 / CSS3 / Vanilla JavaScript    │
-               └────────────────────┬────────────────────┘
-                                    │
-                             HTTP   │ Port 8080
-                                    ▼
-               ┌─────────────────────────────────────────┐
-               │         Frontend Container              │
-               │            Nginx Alpine                 │
-               └────────────────────┬────────────────────┘
-                                    │
-                         REST API   │ Port 8000
-                                    ▼
-               ┌─────────────────────────────────────────┐
-               │          Backend Container              │
-               │               FastAPI                   │
-               │  ┌──────────────────┬────────────────┐  │
-               │  │  TensorFlow CNN  │  LIME Engine   │  │
-               │  └──────────────────┴────────────────┘  │
-               │                     │                   │
-               │         SQLAlchemy + SQLite             │
-               └─────────────────────┬───────────────────┘
-                                     │
-                                     ▼
-                             AWS EC2 Instance
+                         🌐 CLIENT
+                            │
+                            ▼
+              ┌─────────────────────────────┐
+              │       👤 User Browser       │
+              │                             │
+              │   HTML5 / CSS3 / JavaScript │
+              └──────────────┬──────────────┘
+                             │
+                    HTTP :8080
+                             │
+                             ▼
+              ┌─────────────────────────────┐
+              │     🎨 FRONTEND CONTAINER  │
+              │                             │
+              │          Nginx Alpine       │
+              └──────────────┬──────────────┘
+                             │
+                    REST API :8000
+                             │
+                             ▼
+              ┌─────────────────────────────┐
+              │     ⚡ BACKEND CONTAINER    │
+              │                             │
+              │           FastAPI           │
+              │                             │
+              │   ┌─────────────────────┐   │
+              │   │ 🧠 TensorFlow CNN   │   │
+              │   ├─────────────────────┤   │
+              │   │ 🔍 LIME Engine      │   │
+              │   └─────────────────────┘   │
+              │              │              │
+              │   SQLAlchemy + SQLite       │
+              └──────────────┬──────────────┘
+                             │
+                             ▼
+                    ☁️ AWS EC2 Instance
+```
+
 ---
 
-## 🔄 Application Workflow
+# 🔄 Application Workflow
 
-The application follows an end-to-end workflow from user authentication to MRI classification and explainable prediction.
+The application follows an end-to-end workflow from authentication to MRI classification and explainable prediction.
 
 ```text
-┌─────────────────────┐
-│      User           │
-│   Opens Web App     │
-└──────────┬──────────┘
-           │
-           ▼
-┌─────────────────────┐
-│ Register / Login    │
-│   Authentication    │
-└──────────┬──────────┘
-           │
-           ▼
-┌─────────────────────┐
-│   Upload MRI Image  │
-│  Preview MRI Scan   │
-└──────────┬──────────┘
-           │
-           ▼
-┌─────────────────────┐
-│  Frontend JavaScript│
-│   Sends API Request │
-└──────────┬──────────┘
-           │
-           ▼
-┌─────────────────────┐
-│    FastAPI Backend  │
-│      /predict       │
-└──────────┬──────────┘
-           │
-           ▼
-┌─────────────────────┐
-│ Image Preprocessing │
-│ Resize + Normalize  │
-└──────────┬──────────┘
-           │
-           ▼
-┌─────────────────────┐
-│ TensorFlow / Keras  │
-│     CNN Model       │
-└──────────┬──────────┘
-           │
-           ▼
-┌─────────────────────────────┐
-│     Classification Result   │
-│                             │
-│  Glioma                    │
-│  Meningioma                │
-│  No Tumor                  │
-│  Pituitary                 │
-└──────────┬──────────────────┘
-           │
-           ├──────────────────────┐
-           │                      │
-           ▼                      ▼
-┌─────────────────────┐  ┌─────────────────────┐
-│ Class Probabilities │  │    LIME Analysis    │
-│    Visualization    │  │ Explain Prediction  │
-└──────────┬──────────┘  └──────────┬──────────┘
-           │                        │
-           └────────────┬───────────┘
-                        │
-                        ▼
-              ┌─────────────────────┐
-              │   Results Dashboard │
-              │                     │
-              │ • Prediction        │
-              │ • Probabilities     │
-              │ • LIME Explanation  │
-              └─────────────────────┘
+┌─────────────────────────┐
+│        👤 USER          │
+│     Opens Web App       │
+└────────────┬────────────┘
+             │
+             ▼
+┌─────────────────────────┐
+│    🔐 REGISTER / LOGIN  │
+│     Authentication      │
+└────────────┬────────────┘
+             │
+             ▼
+┌─────────────────────────┐
+│    🧠 UPLOAD MRI IMAGE  │
+│      Preview Scan       │
+└────────────┬────────────┘
+             │
+             ▼
+┌─────────────────────────┐
+│   🎨 FRONTEND JAVASCRIPT│
+│     Sends API Request   │
+└────────────┬────────────┘
+             │
+             ▼
+┌─────────────────────────┐
+│     ⚡ FASTAPI BACKEND  │
+│        /predict         │
+└────────────┬────────────┘
+             │
+             ▼
+┌─────────────────────────┐
+│   🛠️ IMAGE PROCESSING  │
+│    Resize + Normalize   │
+└────────────┬────────────┘
+             │
+             ▼
+┌─────────────────────────┐
+│    🧠 TENSORFLOW CNN    │
+│       Model Inference   │
+└────────────┬────────────┘
+             │
+             ▼
+┌──────────────────────────────┐
+│      📊 CLASSIFICATION        │
+│                              │
+│  🧠 Glioma                   │
+│  🧠 Meningioma               │
+│  🧠 No Tumor                 │
+│  🧠 Pituitary                │
+└──────────────┬───────────────┘
+               │
+               ├──────────────────────┐
+               │                      │
+               ▼                      ▼
+     ┌───────────────────┐   ┌───────────────────┐
+     │ 📊 CLASS          │   │ 🔍 LIME           │
+     │ PROBABILITIES     │   │ ANALYSIS          │
+     │ Visualization     │   │ Explain Prediction│
+     └─────────┬─────────┘   └─────────┬─────────┘
+               │                       │
+               └───────────┬───────────┘
+                           │
+                           ▼
+                ┌────────────────────────┐
+                │    🎯 RESULTS DASHBOARD│
+                │                        │
+                │  • Prediction          │
+                │  • Probabilities       │
+                │  • LIME Explanation    │
+                └────────────────────────┘
+```
 
 ---
-## 🧠 Machine Learning Pipeline
 
-The application uses a TensorFlow/Keras CNN to classify brain MRI scans into four categories: **Glioma, Meningioma, Pituitary, and No Tumor**.
+# 🧠 Machine Learning Pipeline
+
+The application uses a **TensorFlow/Keras CNN** to classify brain MRI scans into four categories:
+
+**Glioma · Meningioma · Pituitary · No Tumor**
 
 ```text
-MRI Image → Resize (224×224) → Normalize (0–1)
-          → Data Augmentation → CNN
-          → Softmax Probabilities → Predicted Class
+           🧠 MRI Image
+                │
+                ▼
+       📐 Resize 224×224
+                │
+                ▼
+       🔢 Normalize 0–1
+                │
+                ▼
+       🔄 Data Augmentation
+                │
+                ▼
+          🧠 CNN Model
+                │
+                ▼
+      📊 Softmax Probabilities
+                │
+                ▼
+        🎯 Predicted Class
+```
 
+---
 
-## 🔍 Explainable AI — LIME
+# 🔍 Explainable AI — LIME
 
 To improve model interpretability, the application integrates **LIME (Local Interpretable Model-Agnostic Explanations)**.
 
-After generating a prediction, the system can analyze the MRI image and identify regions that contributed most to the model's decision.
+After generating a prediction, the system analyzes the MRI image and identifies regions that contributed most to the model's decision.
 
 ```text
-MRI Image
-    │
-    ▼
-CNN Prediction
-    │
-    ▼
-LIME Analysis
-    │
-    ▼
-Important Image Regions
-    │
-    ▼
-Visual Explanation
+        🧠 MRI Image
+              │
+              ▼
+       🧠 CNN Prediction
+              │
+              ▼
+        🔍 LIME Analysis
+              │
+              ▼
+    🟥 Important Image Regions
+              │
+              ▼
+       💡 Visual Explanation
+```
 
+### ✨ Explainability Flow
 
-## ⚡ FastAPI Backend
+```text
+Prediction
+    │
+    ▼
+LIME Perturbation
+    │
+    ▼
+Model Responses
+    │
+    ▼
+Important Regions
+    │
+    ▼
+Heatmap / Explanation
+```
+
+---
+
+# ⚡ FastAPI Backend
 
 The application uses **FastAPI** to provide a lightweight and scalable REST API for authentication, MRI prediction, and explainable AI.
 
-### API Endpoints
+## 🔌 API Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/` | API health/status check |
-| `POST` | `/register` | Register a new user |
-| `POST` | `/login` | Authenticate an existing user |
-| `POST` | `/predict` | Classify a brain MRI image |
-| `POST` | `/explain` | Generate a LIME explanation |
-| `GET` | `/docs` | Interactive Swagger API documentation |
+| Method | Endpoint    | Description                              |
+| :----: | :---------- | :--------------------------------------- |
+|  `GET` | `/`         | 🩺 API health/status check               |
+| `POST` | `/register` | 👤 Register a new user                   |
+| `POST` | `/login`    | 🔐 Authenticate an existing user         |
+| `POST` | `/predict`  | 🧠 Classify a brain MRI image            |
+| `POST` | `/explain`  | 🔍 Generate a LIME explanation           |
+|  `GET` | `/docs`     | 📚 Interactive Swagger API documentation |
 
-### Backend Responsibilities
+## 🛠️ Backend Responsibilities
 
-- User registration and authentication
-- MRI image upload handling
-- Brain tumor classification using the trained CNN
-- Prediction probability generation
-- LIME-based visual explanations
-- SQLite database integration using SQLAlchemy
-- REST API communication with the frontend
+* 👤 User registration and authentication
+* 📤 MRI image upload handling
+* 🧠 Brain tumor classification using the trained CNN
+* 📊 Prediction probability generation
+* 🔍 LIME-based visual explanations
+* 🗄️ SQLite database integration using SQLAlchemy
+* 🔌 REST API communication with the frontend
 
 FastAPI's built-in **Swagger UI** makes it easy to test and explore the available endpoints during development and deployment.
 
+---
 
+# 🔐 Database & Authentication
 
-## 🔐 Database & Authentication
+The application includes a user authentication system backed by **SQLite** and **SQLAlchemy**.
 
-The application includes a simple user authentication system backed by **SQLite** and **SQLAlchemy**.
+## 🔄 Authentication Flow
 
-### Authentication Flow
+### 👤 Registration
 
 ```text
-User Registration
-       │
-       ▼
-   FastAPI API
-       │
-       ▼
- SQLite Database
-       │
-       ▼
- User Account Created
+👤 User Registration
+        │
+        ▼
+⚡ FastAPI API
+        │
+        ▼
+🗄️ SQLite Database
+        │
+        ▼
+✅ User Account Created
+```
 
+### 🔑 Login
 
-### For User Login
+```text
+👤 User Login
+      │
+      ▼
+⚡ FastAPI Authentication
+      │
+      ▼
+🔐 Validate Credentials
+      │
+      ▼
+🎯 Access Dashboard
+```
 
- User Login
-    │
-    ▼
-FastAPI Authentication
-    │
-    ▼
-Validate User Credentials
-    │
-    ▼
-Access Dashboard
-                               
-## 🎨 Frontend
+---
+
+# 🎨 Frontend
 
 The frontend provides the user-facing interface for authentication, MRI image upload, prediction results, and explainable AI visualization.
 
-### Features
+## ✨ Features
 
-- User registration and login
-- Brain MRI image upload
-- Real-time communication with the FastAPI backend
-- Predicted tumor class and probability display
-- LIME explanation visualization
-- Dashboard-based user experience
-- Responsive interface using HTML and CSS
+* 👤 User registration and login
+* 🧠 Brain MRI image upload
+* ⚡ Real-time communication with the FastAPI backend
+* 📊 Predicted tumor class and probability display
+* 🔍 LIME explanation visualization
+* 🎯 Dashboard-based user experience
+* 📱 Responsive interface using HTML and CSS
 
-### Technology
+## 💻 Technology
 
-- **HTML5**
-- **CSS3**
-- **JavaScript**
-- **Nginx** for serving the frontend in Docker
+| Technology     | Purpose                      |
+| :------------- | :--------------------------- |
+| **HTML5**      | 🧱 Page structure            |
+| **CSS3**       | 🎨 Styling and responsive UI |
+| **JavaScript** | ⚡ Client-side functionality  |
+| **Nginx**      | 🌐 Frontend web server       |
 
 The frontend dynamically determines the backend API host from the current browser hostname, allowing the same frontend build to work across local Docker and AWS EC2 deployments.
 
+---
 
-
-## 🐳 Docker Architecture
+# 🐳 Docker Architecture
 
 The application is containerized using **Docker**, with separate containers for the backend API and frontend web server.
 
-### Container Architecture
+## 📦 Container Architecture
 
 ```text
-                    ┌──────────────────────────┐
-                    │        User / Browser     │
-                    └────────────┬─────────────┘
-                                 │
-                                 ▼
-                    ┌──────────────────────────┐
-                    │   Frontend Container     │
-                    │   Nginx + HTML/CSS/JS    │
-                    │        Port: 8080        │
-                    └────────────┬─────────────┘
-                                 │
-                                 │ HTTP API Requests
-                                 ▼
-                    ┌──────────────────────────┐
-                    │   Backend Container      │
-                    │   FastAPI + TensorFlow   │
-                    │        Port: 8000        │
-                    └────────────┬─────────────┘
-                                 │
-                    ┌────────────┴─────────────┐
-                    ▼                          ▼
-          ┌─────────────────┐       ┌──────────────────┐
-          │  SQLite Database │       │  CNN Model       │
-          │ brain_tumor.db   │       │ best_model.keras │
-          └─────────────────┘       └──────────────────┘
+                         👤 USER
+                           │
+                           ▼
+              ┌──────────────────────────┐
+              │     🌐 WEB BROWSER       │
+              └────────────┬─────────────┘
+                           │
+                           ▼
+              ┌──────────────────────────┐
+              │  🎨 FRONTEND CONTAINER   │
+              │                          │
+              │  Nginx + HTML/CSS/JS     │
+              │       Port: 8080         │
+              └────────────┬─────────────┘
+                           │
+                   HTTP API Requests
+                           │
+                           ▼
+              ┌──────────────────────────┐
+              │   ⚡ BACKEND CONTAINER   │
+              │                          │
+              │  FastAPI + TensorFlow    │
+              │       Port: 8000         │
+              └────────────┬─────────────┘
+                           │
+                  ┌────────┴────────┐
+                  │                 │
+                  ▼                 ▼
+        ┌─────────────────┐  ┌──────────────────┐
+        │ 🗄️ SQLite DB    │  │ 🧠 CNN Model     │
+        │ brain_tumor.db  │  │ best_model.keras │
+        └─────────────────┘  └──────────────────┘
+```
 
+---
 
-## 📦 Docker Hub
+# 📦 Docker Hub
 
 The containerized application is published to **Docker Hub** so the deployment environment can pull pre-built images without rebuilding the application on the server.
 
-### Image Workflow
+## 🔄 Image Workflow
 
 ```text
-Source Code
-     │
-     ▼
-Build Docker Images
-     │
-     ▼
-Push Images to Docker Hub
-     │
-     ▼
-AWS EC2
-     │
-     ▼
-Pull Images
-     │
-     ▼
-Run Containers
+💻 Source Code
+      │
+      ▼
+🐳 Build Docker Images
+      │
+      ▼
+📦 Push Images to Docker Hub
+      │
+      ▼
+☁️ AWS EC2
+      │
+      ▼
+⬇️ Pull Images
+      │
+      ▼
+🚀 Run Containers
+```
 
+---
 
-
-## ☁️ AWS EC2 Deployment
+# ☁️ AWS EC2 Deployment
 
 The application is deployed on **Amazon EC2** using Docker containers.
 
-### Deployment Environment
+## 🖥️ Deployment Environment
 
-- **Cloud Provider:** AWS
-- **Service:** Amazon EC2
-- **Operating System:** Ubuntu Server
-- **Instance Type:** `t3.small`
-- **Architecture:** x86_64
-- **Storage:** 20 GiB gp3
-- **Region:** Asia Pacific (Mumbai)
+| Configuration           | Value                 |
+| :---------------------- | :-------------------- |
+| ☁️ **Cloud Provider**   | AWS                   |
+| 🖥️ **Service**         | Amazon EC2            |
+| 🐧 **Operating System** | Ubuntu Server         |
+| ⚙️ **Instance Type**    | `t3.small`            |
+| 🏗️ **Architecture**    | x86_64                |
+| 💾 **Storage**          | 20 GiB gp3            |
+| 🌏 **Region**           | Asia Pacific (Mumbai) |
 
-### Deployment Architecture
+## 🏗️ Deployment Architecture
 
 ```text
-                    AWS EC2 Instance
-                         │
-              ┌──────────┴──────────┐
-              │                     │
-              ▼                     ▼
-     ┌─────────────────┐   ┌─────────────────┐
-     │ Backend Docker  │   │ Frontend Docker │
-     │    Container    │   │    Container    │
-     │    Port 8000    │   │    Port 8080    │
-     └────────┬────────┘   └─────────────────┘
-              │
-       ┌──────┴───────┐
-       ▼              ▼
-  SQLite Database   CNN Model
+                    ☁️ AWS EC2 INSTANCE
+                            │
+               ┌────────────┴────────────┐
+               │                         │
+               ▼                         ▼
+      ┌─────────────────┐       ┌─────────────────┐
+      │ ⚡ BACKEND       │       │ 🎨 FRONTEND     │
+      │ Docker Container │       │ Docker Container │
+      │    Port 8000     │       │    Port 8080     │
+      └────────┬────────┘       └─────────────────┘
+               │
+        ┌──────┴──────┐
+        │             │
+        ▼             ▼
+ ┌──────────────┐ ┌──────────────┐
+ │ 🗄️ SQLite DB │ │ 🧠 CNN Model │
+ └──────────────┘ └──────────────┘
+```
 
+---
 
-
-## 📈 Project Evolution
+# 📈 Project Evolution
 
 The project evolved from a standalone CNN-based classification model into a complete full-stack AI application.
 
-### Evolution
+## 🔄 Evolution Timeline
 
 ```text
-CNN Model Development
-        │
-        ▼
-Brain MRI Classification
-        │
-        ▼
-Model Evaluation
-        │
-        ▼
-FastAPI Inference Backend
-        │
-        ▼
-LIME Explainability
-        │
-        ▼
-User Authentication + Database
-        │
-        ▼
-Web-Based Frontend
-        │
-        ▼
-Docker Containerization
-        │
-        ▼
-Docker Hub Image Distribution
-        │
-        ▼
-AWS EC2 Deployment
+🧠 CNN Model Development
+          │
+          ▼
+🩻 Brain MRI Classification
+          │
+          ▼
+📊 Model Evaluation
+          │
+          ▼
+⚡ FastAPI Inference Backend
+          │
+          ▼
+🔍 LIME Explainability
+          │
+          ▼
+🔐 User Authentication + Database
+          │
+          ▼
+🎨 Web-Based Frontend
+          │
+          ▼
+🐳 Docker Containerization
+          │
+          ▼
+📦 Docker Hub Image Distribution
+          │
+          ▼
+☁️ AWS EC2 Deployment
+```
 
+---
 
+# 🛠️ Engineering Highlights
 
-## 🛠️ Engineering Highlights
+This project demonstrates practical **software engineering, machine learning, and cloud deployment skills** alongside the core AI model.
 
-This project demonstrates practical software engineering and deployment skills alongside machine learning.
+## 🔧 Key Engineering Practices
 
-### Key Engineering Practices
+| Area                       | Implementation                                          |
+| :------------------------- | :------------------------------------------------------ |
+| ⚡ **Backend**              | RESTful API using FastAPI                               |
+| 🧠 **AI Inference**        | TensorFlow/Keras CNN                                    |
+| 🔍 **Explainability**      | LIME-based visual explanations                          |
+| 🗄️ **Database**           | SQLite + SQLAlchemy                                     |
+| 🎨 **Frontend**            | Separate frontend/backend architecture                  |
+| 🐳 **Containerization**    | Docker                                                  |
+| 🔄 **Orchestration**       | Docker Compose                                          |
+| 📦 **Distribution**        | Docker Hub                                              |
+| ☁️ **Deployment**          | AWS EC2                                                 |
+| 🔐 **Networking**          | AWS Security Groups                                     |
+| 💾 **Persistence**         | SQLite database persisted outside backend container     |
+| 🛡️ **Repository Hygiene** | `.gitignore` and `.dockerignore`                        |
+| 🔬 **ML Integration**      | Original ML work extended into a deployable application |
 
-- Designed a **RESTful backend** using FastAPI
-- Integrated a trained **TensorFlow/Keras CNN** into an inference API
-- Added **LIME-based explainability** for model predictions
-- Implemented **SQLite + SQLAlchemy** for persistent application data
-- Built a separate **frontend and backend architecture**
-- Containerized services using **Docker**
-- Used **Docker Compose** to orchestrate multiple containers
-- Published Docker images to **Docker Hub**
-- Deployed the application on **AWS EC2**
-- Configured AWS **Security Groups** for application access
-- Persisted the SQLite database outside the backend container
-- Used `.gitignore` and `.dockerignore` to prevent unnecessary files and sensitive/local artifacts from being included in source control or Docker builds
-- Maintained the original machine learning work while extending it into a deployable full-stack application
+---
 
+# 🎯 Project Purpose
 
-
-## 🎯 Project Purpose
-
-This project was developed to explore how a machine learning model can be transformed into a complete, deployable AI application.
+This project was developed to explore how a **machine learning model can be transformed into a complete, deployable AI application**.
 
 Rather than stopping at model training and evaluation, the project combines:
 
-- 🧠 **Machine Learning** — CNN-based MRI classification
-- 🔍 **Explainable AI** — LIME-based visual explanations
-- ⚡ **Backend Development** — FastAPI REST API
-- 🎨 **Frontend Development** — HTML, CSS, and JavaScript
-- 🔐 **Authentication** — User registration and login
-- 🗄️ **Database** — SQLite with SQLAlchemy
-- 🐳 **Containerization** — Docker and Docker Compose
-- 📦 **Image Distribution** — Docker Hub
-- ☁️ **Cloud Deployment** — AWS EC2
+| Component                   | Technology                     |
+| :-------------------------- | :----------------------------- |
+| 🧠 **Machine Learning**     | CNN-based MRI classification   |
+| 🔍 **Explainable AI**       | LIME-based visual explanations |
+| ⚡ **Backend Development**   | FastAPI REST API               |
+| 🎨 **Frontend Development** | HTML, CSS, JavaScript          |
+| 🔐 **Authentication**       | User registration and login    |
+| 🗄️ **Database**            | SQLite with SQLAlchemy         |
+| 🐳 **Containerization**     | Docker & Docker Compose        |
+| 📦 **Image Distribution**   | Docker Hub                     |
+| ☁️ **Cloud Deployment**     | AWS EC2                        |
 
-The result is an end-to-end system demonstrating the complete journey from **machine learning experimentation to a containerized and cloud-deployed application**.
+---
 
-> **Note:** This project is intended for educational and demonstration purposes and should not be used as a substitute for professional medical diagnosis.
+## 🚀 End-to-End Journey
+
+```text
+          🧪 MACHINE LEARNING
+                  │
+                  ▼
+          🧠 CNN DEVELOPMENT
+                  │
+                  ▼
+          🩻 MRI CLASSIFICATION
+                  │
+                  ▼
+          🔍 XAI / LIME
+                  │
+                  ▼
+          ⚡ FASTAPI BACKEND
+                  │
+                  ▼
+          🎨 WEB FRONTEND
+                  │
+                  ▼
+          🔐 AUTHENTICATION
+                  │
+                  ▼
+          🗄️ DATABASE
+                  │
+                  ▼
+          🐳 DOCKERIZATION
+                  │
+                  ▼
+          📦 DOCKER HUB
+                  │
+                  ▼
+          ☁️ AWS EC2
+                  │
+                  ▼
+          🚀 DEPLOYED AI APP
+```
+
+The result is an **end-to-end system** demonstrating the complete journey from **machine learning experimentation to a containerized and cloud-deployed application**.
+
+---
+
+> ⚠️ **Note:** This project is intended for educational and demonstration purposes and should not be used as a substitute for professional medical diagnosis.
