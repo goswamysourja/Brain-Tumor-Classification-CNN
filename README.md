@@ -16,7 +16,7 @@
 
 ## 📌 Overview
 
-A production-ready, full-stack AI platform for **multi-class brain tumor classification from MRI scans**.
+A full-stack AI platform for **multi-class brain tumor classification from MRI scans**.
 
 The system combines:
 
@@ -30,7 +30,7 @@ The system combines:
 * 📦 **Docker Hub image distribution**
 * ☁️ **AWS EC2 cloud deployment**
 
-> ⚠️ **Medical Disclaimer:** This project is intended strictly for research, educational, and portfolio demonstration purposes. It is **not a certified clinical diagnostic tool**.
+
 
 ---
 
@@ -46,57 +46,42 @@ The system combines:
 
 ### 🎯 Supported Classes
 
-```text
-🧠 Glioma
-🧠 Meningioma
-🧠 Pituitary
-🟢 No Tumor
-```
+* 🧠 Glioma
+* 🧠 Meningioma
+* 🧠 Pituitary
+* 🟢 No Tumor
 
 ---
 
 # 🏗️ System Architecture
 
-The application follows a **frontend → API → AI inference → database/explainability** architecture.
+The application follows a **Frontend → API → AI Inference → Database / Explainability** architecture.
 
-```text
-                         🌐 CLIENT
-                            │
-                            ▼
-              ┌─────────────────────────────┐
-              │       👤 User Browser       │
-              │                             │
-              │   HTML5 / CSS3 / JavaScript │
-              └──────────────┬──────────────┘
-                             │
-                    HTTP :8080
-                             │
-                             ▼
-              ┌─────────────────────────────┐
-              │     🎨 FRONTEND CONTAINER  │
-              │                             │
-              │          Nginx Alpine       │
-              └──────────────┬──────────────┘
-                             │
-                    REST API :8000
-                             │
-                             ▼
-              ┌─────────────────────────────┐
-              │     ⚡ BACKEND CONTAINER    │
-              │                             │
-              │           FastAPI           │
-              │                             │
-              │   ┌─────────────────────┐   │
-              │   │ 🧠 TensorFlow CNN   │   │
-              │   ├─────────────────────┤   │
-              │   │ 🔍 LIME Engine      │   │
-              │   └─────────────────────┘   │
-              │              │              │
-              │   SQLAlchemy + SQLite       │
-              └──────────────┬──────────────┘
-                             │
-                             ▼
-                    ☁️ AWS EC2 Instance
+```mermaid
+flowchart TD
+    A(["🌐 Client"]) --> B(["👤 User Browser<br/>HTML5 · CSS3 · JavaScript"])
+
+    B -->|HTTP :8080| C(["🎨 Frontend Container<br/>Nginx Alpine"])
+
+    C -->|REST API :8000| D(["⚡ Backend Container<br/>FastAPI"])
+
+    D --> E(["🧠 TensorFlow CNN"])
+    D --> F(["🔍 LIME Engine"])
+    D --> G(["🗄️ SQLAlchemy + SQLite"])
+
+    E --> H(["🎯 AI Prediction"])
+    F --> I(["💡 Explanation"])
+
+    H --> J(["📊 Results"])
+    I --> J
+
+    K(["☁️ AWS EC2 Instance"]) --> C
+    K --> D
+
+    classDef default fill:#ffffff,stroke:#64748b,stroke-width:2px,color:#0f172a;
+    classDef cloud fill:#f8fafc,stroke:#475569,stroke-width:2px,color:#0f172a;
+
+    class A,B,C,D,E,F,G,H,I,J,K default;
 ```
 
 ---
@@ -105,77 +90,37 @@ The application follows a **frontend → API → AI inference → database/expla
 
 The application follows an end-to-end workflow from authentication to MRI classification and explainable prediction.
 
-```text
-┌─────────────────────────┐
-│        👤 USER          │
-│     Opens Web App       │
-└────────────┬────────────┘
-             │
-             ▼
-┌─────────────────────────┐
-│    🔐 REGISTER / LOGIN  │
-│     Authentication      │
-└────────────┬────────────┘
-             │
-             ▼
-┌─────────────────────────┐
-│    🧠 UPLOAD MRI IMAGE  │
-│      Preview Scan       │
-└────────────┬────────────┘
-             │
-             ▼
-┌─────────────────────────┐
-│   🎨 FRONTEND JAVASCRIPT│
-│     Sends API Request   │
-└────────────┬────────────┘
-             │
-             ▼
-┌─────────────────────────┐
-│     ⚡ FASTAPI BACKEND  │
-│        /predict         │
-└────────────┬────────────┘
-             │
-             ▼
-┌─────────────────────────┐
-│   🛠️ IMAGE PROCESSING  │
-│    Resize + Normalize   │
-└────────────┬────────────┘
-             │
-             ▼
-┌─────────────────────────┐
-│    🧠 TENSORFLOW CNN    │
-│       Model Inference   │
-└────────────┬────────────┘
-             │
-             ▼
-┌──────────────────────────────┐
-│      📊 CLASSIFICATION        │
-│                              │
-│  🧠 Glioma                   │
-│  🧠 Meningioma               │
-│  🧠 No Tumor                 │
-│  🧠 Pituitary                │
-└──────────────┬───────────────┘
-               │
-               ├──────────────────────┐
-               │                      │
-               ▼                      ▼
-     ┌───────────────────┐   ┌───────────────────┐
-     │ 📊 CLASS          │   │ 🔍 LIME           │
-     │ PROBABILITIES     │   │ ANALYSIS          │
-     │ Visualization     │   │ Explain Prediction│
-     └─────────┬─────────┘   └─────────┬─────────┘
-               │                       │
-               └───────────┬───────────┘
-                           │
-                           ▼
-                ┌────────────────────────┐
-                │    🎯 RESULTS DASHBOARD│
-                │                        │
-                │  • Prediction          │
-                │  • Probabilities       │
-                │  • LIME Explanation    │
-                └────────────────────────┘
+```mermaid
+flowchart TD
+    A(["👤 User<br/>Opens Web App"])
+    B(["🔐 Register / Login<br/>Authentication"])
+    C(["🧠 Upload MRI Image<br/>Preview Scan"])
+    D(["🎨 Frontend JavaScript<br/>Sends API Request"])
+    E(["⚡ FastAPI Backend<br/>/predict"])
+    F(["🛠️ Image Processing<br/>Resize + Normalize"])
+    G(["🧠 TensorFlow CNN<br/>Model Inference"])
+    H(["📊 Classification<br/>Glioma · Meningioma<br/>Pituitary · No Tumor"])
+
+    I(["📊 Class Probabilities<br/>Visualization"])
+    J(["🔍 LIME Analysis<br/>Explain Prediction"])
+    K(["🎯 Results Dashboard<br/>Prediction · Probabilities<br/>LIME Explanation"])
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+    G --> H
+
+    H --> I
+    H --> J
+
+    I --> K
+    J --> K
+
+    classDef default fill:#ffffff,stroke:#64748b,stroke-width:2px,color:#0f172a;
+    class A,B,C,D,E,F,G,H,I,J,K default;
 ```
 
 ---
@@ -186,26 +131,25 @@ The application uses a **TensorFlow/Keras CNN** to classify brain MRI scans into
 
 **Glioma · Meningioma · Pituitary · No Tumor**
 
-```text
-           🧠 MRI Image
-                │
-                ▼
-       📐 Resize 224×224
-                │
-                ▼
-       🔢 Normalize 0–1
-                │
-                ▼
-       🔄 Data Augmentation
-                │
-                ▼
-          🧠 CNN Model
-                │
-                ▼
-      📊 Softmax Probabilities
-                │
-                ▼
-        🎯 Predicted Class
+```mermaid
+flowchart TD
+    A(["🧠 MRI Image"])
+    B(["📐 Resize<br/>224 × 224"])
+    C(["🔢 Normalize<br/>0–1"])
+    D(["🔄 Data Augmentation"])
+    E(["🧠 CNN Model"])
+    F(["📊 Softmax Probabilities"])
+    G(["🎯 Predicted Class"])
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+
+    classDef default fill:#ffffff,stroke:#64748b,stroke-width:2px,color:#0f172a;
+    class A,B,C,D,E,F,G default;
 ```
 
 ---
@@ -216,45 +160,47 @@ To improve model interpretability, the application integrates **LIME (Local Inte
 
 After generating a prediction, the system analyzes the MRI image and identifies regions that contributed most to the model's decision.
 
-```text
-        🧠 MRI Image
-              │
-              ▼
-       🧠 CNN Prediction
-              │
-              ▼
-        🔍 LIME Analysis
-              │
-              ▼
-    🟥 Important Image Regions
-              │
-              ▼
-       💡 Visual Explanation
+```mermaid
+flowchart TD
+    A(["🧠 MRI Image"])
+    B(["🧠 CNN Prediction"])
+    C(["🔍 LIME Analysis"])
+    D(["🟥 Important Image Regions"])
+    E(["💡 Visual Explanation"])
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+
+    classDef default fill:#ffffff,stroke:#64748b,stroke-width:2px,color:#0f172a;
+    class A,B,C,D,E default;
 ```
 
 ### ✨ Explainability Flow
 
-```text
-Prediction
-    │
-    ▼
-LIME Perturbation
-    │
-    ▼
-Model Responses
-    │
-    ▼
-Important Regions
-    │
-    ▼
-Heatmap / Explanation
+```mermaid
+flowchart TD
+    A(["🎯 Prediction"])
+    B(["🔍 LIME Perturbation"])
+    C(["🧠 Model Responses"])
+    D(["📍 Important Regions"])
+    E(["🔥 Heatmap / Explanation"])
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+
+    classDef default fill:#ffffff,stroke:#64748b,stroke-width:2px,color:#0f172a;
+    class A,B,C,D,E default;
 ```
 
 ---
 
 # ⚡ FastAPI Backend
 
-The application uses **FastAPI** to provide a lightweight and scalable REST API for authentication, MRI prediction, and explainable AI.
+The application uses **FastAPI** to provide a lightweight REST API for authentication, MRI prediction, and explainable AI.
 
 ## 🔌 API Endpoints
 
@@ -289,32 +235,36 @@ The application includes a user authentication system backed by **SQLite** and *
 
 ### 👤 Registration
 
-```text
-👤 User Registration
-        │
-        ▼
-⚡ FastAPI API
-        │
-        ▼
-🗄️ SQLite Database
-        │
-        ▼
-✅ User Account Created
+```mermaid
+flowchart TD
+    A(["👤 User Registration"])
+    B(["⚡ FastAPI API"])
+    C(["🗄️ SQLite Database"])
+    D(["✅ User Account Created"])
+
+    A --> B
+    B --> C
+    C --> D
+
+    classDef default fill:#ffffff,stroke:#64748b,stroke-width:2px,color:#0f172a;
+    class A,B,C,D default;
 ```
 
 ### 🔑 Login
 
-```text
-👤 User Login
-      │
-      ▼
-⚡ FastAPI Authentication
-      │
-      ▼
-🔐 Validate Credentials
-      │
-      ▼
-🎯 Access Dashboard
+```mermaid
+flowchart TD
+    A(["👤 User Login"])
+    B(["⚡ FastAPI Authentication"])
+    C(["🔐 Validate Credentials"])
+    D(["🎯 Access Dashboard"])
+
+    A --> B
+    B --> C
+    C --> D
+
+    classDef default fill:#ffffff,stroke:#64748b,stroke-width:2px,color:#0f172a;
+    class A,B,C,D default;
 ```
 
 ---
@@ -352,39 +302,26 @@ The application is containerized using **Docker**, with separate containers for 
 
 ## 📦 Container Architecture
 
-```text
-                         👤 USER
-                           │
-                           ▼
-              ┌──────────────────────────┐
-              │     🌐 WEB BROWSER       │
-              └────────────┬─────────────┘
-                           │
-                           ▼
-              ┌──────────────────────────┐
-              │  🎨 FRONTEND CONTAINER   │
-              │                          │
-              │  Nginx + HTML/CSS/JS     │
-              │       Port: 8080         │
-              └────────────┬─────────────┘
-                           │
-                   HTTP API Requests
-                           │
-                           ▼
-              ┌──────────────────────────┐
-              │   ⚡ BACKEND CONTAINER   │
-              │                          │
-              │  FastAPI + TensorFlow    │
-              │       Port: 8000         │
-              └────────────┬─────────────┘
-                           │
-                  ┌────────┴────────┐
-                  │                 │
-                  ▼                 ▼
-        ┌─────────────────┐  ┌──────────────────┐
-        │ 🗄️ SQLite DB    │  │ 🧠 CNN Model     │
-        │ brain_tumor.db  │  │ best_model.keras │
-        └─────────────────┘  └──────────────────┘
+```mermaid
+flowchart TD
+    A(["👤 User"])
+    B(["🌐 Web Browser"])
+
+    C(["🎨 Frontend Container<br/>Nginx + HTML/CSS/JS<br/>Port: 8080"])
+    D(["⚡ Backend Container<br/>FastAPI + TensorFlow<br/>Port: 8000"])
+
+    E(["🗄️ SQLite Database<br/>brain_tumor.db"])
+    F(["🧠 CNN Model<br/>best_model.keras"])
+
+    A --> B
+    B --> C
+    C -->|HTTP API Requests| D
+
+    D --> E
+    D --> F
+
+    classDef default fill:#ffffff,stroke:#64748b,stroke-width:2px,color:#0f172a;
+    class A,B,C,D,E,F default;
 ```
 
 ---
@@ -395,23 +332,23 @@ The containerized application is published to **Docker Hub** so the deployment e
 
 ## 🔄 Image Workflow
 
-```text
-💻 Source Code
-      │
-      ▼
-🐳 Build Docker Images
-      │
-      ▼
-📦 Push Images to Docker Hub
-      │
-      ▼
-☁️ AWS EC2
-      │
-      ▼
-⬇️ Pull Images
-      │
-      ▼
-🚀 Run Containers
+```mermaid
+flowchart TD
+    A(["💻 Source Code"])
+    B(["🐳 Build Docker Images"])
+    C(["📦 Push Images to Docker Hub"])
+    D(["☁️ AWS EC2"])
+    E(["⬇️ Pull Images"])
+    F(["🚀 Run Containers"])
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+
+    classDef default fill:#ffffff,stroke:#64748b,stroke-width:2px,color:#0f172a;
+    class A,B,C,D,E,F default;
 ```
 
 ---
@@ -434,24 +371,24 @@ The application is deployed on **Amazon EC2** using Docker containers.
 
 ## 🏗️ Deployment Architecture
 
-```text
-                    ☁️ AWS EC2 INSTANCE
-                            │
-               ┌────────────┴────────────┐
-               │                         │
-               ▼                         ▼
-      ┌─────────────────┐       ┌─────────────────┐
-      │ ⚡ BACKEND       │       │ 🎨 FRONTEND     │
-      │ Docker Container │       │ Docker Container │
-      │    Port 8000     │       │    Port 8080     │
-      └────────┬────────┘       └─────────────────┘
-               │
-        ┌──────┴──────┐
-        │             │
-        ▼             ▼
- ┌──────────────┐ ┌──────────────┐
- │ 🗄️ SQLite DB │ │ 🧠 CNN Model │
- └──────────────┘ └──────────────┘
+```mermaid
+flowchart TD
+    A(["☁️ AWS EC2 Instance"])
+
+    B(["⚡ Backend Container<br/>FastAPI + TensorFlow<br/>Port 8000"])
+    C(["🎨 Frontend Container<br/>Nginx<br/>Port 8080"])
+
+    D(["🗄️ SQLite Database"])
+    E(["🧠 CNN Model"])
+
+    A --> B
+    A --> C
+
+    B --> D
+    B --> E
+
+    classDef default fill:#ffffff,stroke:#64748b,stroke-width:2px,color:#0f172a;
+    class A,B,C,D,E default;
 ```
 
 ---
@@ -462,35 +399,31 @@ The project evolved from a standalone CNN-based classification model into a comp
 
 ## 🔄 Evolution Timeline
 
-```text
-🧠 CNN Model Development
-          │
-          ▼
-🩻 Brain MRI Classification
-          │
-          ▼
-📊 Model Evaluation
-          │
-          ▼
-⚡ FastAPI Inference Backend
-          │
-          ▼
-🔍 LIME Explainability
-          │
-          ▼
-🔐 User Authentication + Database
-          │
-          ▼
-🎨 Web-Based Frontend
-          │
-          ▼
-🐳 Docker Containerization
-          │
-          ▼
-📦 Docker Hub Image Distribution
-          │
-          ▼
-☁️ AWS EC2 Deployment
+```mermaid
+flowchart TD
+    A(["🧠 CNN Model Development"])
+    B(["🩻 Brain MRI Classification"])
+    C(["📊 Model Evaluation"])
+    D(["⚡ FastAPI Inference Backend"])
+    E(["🔍 LIME Explainability"])
+    F(["🔐 User Authentication + Database"])
+    G(["🎨 Web-Based Frontend"])
+    H(["🐳 Docker Containerization"])
+    I(["📦 Docker Hub Image Distribution"])
+    J(["☁️ AWS EC2 Deployment"])
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+    G --> H
+    H --> I
+    I --> J
+
+    classDef default fill:#ffffff,stroke:#64748b,stroke-width:2px,color:#0f172a;
+    class A,B,C,D,E,F,G,H,I,J default;
 ```
 
 ---
@@ -501,12 +434,12 @@ This project demonstrates practical **software engineering, machine learning, an
 
 ## 🔧 Key Engineering Practices
 
-| Area                       | Implementation                                           |
+| Area                       | Implementation                                          |
 | :------------------------- | :------------------------------------------------------ |
-| ⚡ **Backend**              | RESTful API using FastAPI                              |
+| ⚡ **Backend**              | RESTful API using FastAPI                               |
 | 🧠 **AI Inference**        | TensorFlow/Keras CNN                                    |
 | 🔍 **Explainability**      | LIME-based visual explanations                          |
-| 🗄️ **Database**           | SQLite + SQLAlchemy                                      |
+| 🗄️ **Database**           | SQLite + SQLAlchemy                                     |
 | 🎨 **Frontend**            | Separate frontend/backend architecture                  |
 | 🐳 **Containerization**    | Docker                                                  |
 | 🔄 **Orchestration**       | Docker Compose                                          |
@@ -514,7 +447,7 @@ This project demonstrates practical **software engineering, machine learning, an
 | ☁️ **Deployment**          | AWS EC2                                                 |
 | 🔐 **Networking**          | AWS Security Groups                                     |
 | 💾 **Persistence**         | SQLite database persisted outside backend container     |
-| 🛡️ **Repository Hygiene** | `.gitignore` and `.dockerignore`                         |
+| 🛡️ **Repository Hygiene** | `.gitignore` and `.dockerignore`                        |
 | 🔬 **ML Integration**      | Original ML work extended into a deployable application |
 
 ---
@@ -529,10 +462,10 @@ Rather than stopping at model training and evaluation, the project combines:
 | :-------------------------- | :----------------------------- |
 | 🧠 **Machine Learning**     | CNN-based MRI classification   |
 | 🔍 **Explainable AI**       | LIME-based visual explanations |
-| ⚡ **Backend Development**   | FastAPI REST API              |
+| ⚡ **Backend Development**   | FastAPI REST API               |
 | 🎨 **Frontend Development** | HTML, CSS, JavaScript          |
 | 🔐 **Authentication**       | User registration and login    |
-| 🗄️ **Database**            | SQLite with SQLAlchemy          |
+| 🗄️ **Database**            | SQLite with SQLAlchemy         |
 | 🐳 **Containerization**     | Docker & Docker Compose        |
 | 📦 **Image Distribution**   | Docker Hub                     |
 | ☁️ **Cloud Deployment**     | AWS EC2                        |
@@ -541,42 +474,115 @@ Rather than stopping at model training and evaluation, the project combines:
 
 ## 🚀 End-to-End Journey
 
-```text
-          🧪 MACHINE LEARNING
-                  │
-                  ▼
-          🧠 CNN DEVELOPMENT
-                  │
-                  ▼
-          🩻 MRI CLASSIFICATION
-                  │
-                  ▼
-          🔍 XAI / LIME
-                  │
-                  ▼
-          ⚡ FASTAPI BACKEND
-                  │
-                  ▼
-          🎨 WEB FRONTEND
-                  │
-                  ▼
-          🔐 AUTHENTICATION
-                  │
-                  ▼
-          🗄️ DATABASE
-                  │
-                  ▼
-          🐳 DOCKERIZATION
-                  │
-                  ▼
-          📦 DOCKER HUB
-                  │
-                  ▼
-          ☁️ AWS EC2
-                  │
-                  ▼
-          🚀 DEPLOYED AI APP
+```mermaid
+flowchart TD
+    A(["🧪 Machine Learning"])
+    B(["🧠 CNN Development"])
+    C(["🩻 MRI Classification"])
+    D(["🔍 XAI / LIME"])
+    E(["⚡ FastAPI Backend"])
+    F(["🎨 Web Frontend"])
+    G(["🔐 Authentication"])
+    H(["🗄️ Database"])
+    I(["🐳 Dockerization"])
+    J(["📦 Docker Hub"])
+    K(["☁️ AWS EC2"])
+    L(["🚀 Deployed AI Application"])
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+    G --> H
+    H --> I
+    I --> J
+    J --> K
+    K --> L
+
+    classDef default fill:#ffffff,stroke:#64748b,stroke-width:2px,color:#0f172a;
+    class A,B,C,D,E,F,G,H,I,J,K,L default;
+```
+
+---
+
+## ⭐ Project Stack
+
+```mermaid
+flowchart LR
+    A(["🧠 AI / ML<br/>TensorFlow · Keras · LIME"])
+    B(["⚡ Backend<br/>FastAPI · SQLAlchemy"])
+    C(["🎨 Frontend<br/>HTML · CSS · JavaScript"])
+    D(["🗄️ Database<br/>SQLite"])
+    E(["🐳 DevOps<br/>Docker · Compose · Docker Hub"])
+    F(["☁️ Cloud<br/>AWS EC2"])
+
+    A --> B
+    B --> C
+    B --> D
+    B --> E
+    E --> F
+
+    classDef default fill:#ffffff,stroke:#64748b,stroke-width:2px,color:#0f172a;
+    class A,B,C,D,E,F default;
+```
+
+---
+
+## 📌 Final Architecture
+
+```mermaid
+flowchart TB
+    U(["👤 User"])
+
+    FE(["🎨 Frontend<br/>HTML · CSS · JavaScript<br/>Nginx :8080"])
+
+    API(["⚡ FastAPI Backend<br/>REST API :8000"])
+
+    ML(["🧠 TensorFlow CNN<br/>MRI Classification"])
+
+    XAI(["🔍 LIME<br/>Explainable AI"])
+
+    DB(["🗄️ SQLite<br/>User Data"])
+
+    HUB(["📦 Docker Hub"])
+
+    AWS(["☁️ AWS EC2"])
+
+    RESULT(["🎯 Results Dashboard<br/>Prediction · Probabilities · Explanation"])
+
+    U --> FE
+    FE --> API
+
+    API --> ML
+    API --> XAI
+    API --> DB
+
+    ML --> RESULT
+    XAI --> RESULT
+
+    FE --> AWS
+    API --> AWS
+
+    HUB --> AWS
+
+    classDef default fill:#ffffff,stroke:#64748b,stroke-width:2px,color:#0f172a;
+    class U,FE,API,ML,XAI,DB,HUB,AWS,RESULT default;
+```
+
+---
+
+<p align="center">
+  <strong>🧠 From MRI Classification → Explainable AI → Full-Stack Application → Docker → AWS 🚀</strong>
+</p>
 
 
+---
 
+# 👨‍💻 Team
 
+## Developers
+
+* **Sourja Goswamy**
+* **Soumik Chowdhury**
